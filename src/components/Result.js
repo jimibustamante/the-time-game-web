@@ -1,4 +1,6 @@
 import React from 'react'
+import { Result as Wrapper, Button} from '../styles'
+import { AiOutlineCheckCircle as Success, AiOutlineCloseCircle as Fail } from 'react-icons/ai'
 
 function whichWasFirst(options) {
   if (parseInt(options[0].year) < parseInt(options[1].year)) {
@@ -8,7 +10,7 @@ function whichWasFirst(options) {
   }
 }
 
-export default function Result({answer, options}) {
+export default function Result({answer, options, next}) {
   const solution = whichWasFirst(options)
   let result = false
   if (solution.year === answer.year) {
@@ -16,13 +18,15 @@ export default function Result({answer, options}) {
   }
   
   return (
-    <div>
+    <Wrapper>
       {result &&
-        'Yes'
+        <Success size={150} className='success' />
+        
       }
       {!result &&
-        'no'
+        <Fail size={150} className='fail' />
       }
-    </div>
+      <Button onClick={next} >Next</Button>
+    </Wrapper>
   )
 }

@@ -9,7 +9,7 @@ function shuffle(a) {
   return a;
 }
 
-export function Option({ option, onAnswer }) {
+const Option = memo(({ option, onAnswer }) => {
   let name = option.name
   if (name.includes(' - ')) {
     const items = name.split(' - ')
@@ -21,7 +21,7 @@ export function Option({ option, onAnswer }) {
       {name}
     </div>
   )
-}
+})
 
 function Options({ options = [], onAnswer }) {
   return (

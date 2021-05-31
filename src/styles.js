@@ -62,4 +62,26 @@ export const Result = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  svg {
+    &.success {
+      color: green;
+    }
+    &.fail {
+      color: red;
+    }
+  }
+`
+export const Button = styled.button`
+  background-color: ${COLORS.secondary};
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  font-size: 20px;
+  margin-top: 2rem;
+  padding: 10px 20px;
+  border-radius: 5px;
 `

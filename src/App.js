@@ -12,24 +12,33 @@ function App() {
   const [options, setOptions] = useState([])
   const [answer, setAnswer] = useState(null)
 
-  useEffect(() => {
-    if (facts.length <= 0) return
+  function pickOptions(list) {
     const optionsIndexes = []
     while (optionsIndexes.length < 2) {
-      const index = Math.floor(Math.random() * facts.length)
+      const index = Math.floor(Math.random() * list.length)
       if (!optionsIndexes.includes(index)) {
         optionsIndexes.push(index)
       }
     }
     const opts = optionsIndexes.map((index) => {
-      return facts[index]
+      return list[index]
     })
-    setOptions(opts)
+    return opts
+  }
+
+  useEffect(() => {
+    if (facts.length <= 0) return
+    setOptions(pickOptions(facts))
     
   }, [facts])
 
   const onAnswer = (option) => {
     setAnswer(option)
+  }
+
+  const next = () => {
+    setAnswer(null)
+    setOptions(pickOptions(facts))
   }
 
   async function fetchFacts() {
@@ -63,7 +72,7 @@ function App() {
     <AppWrapper>
       {answer &&
         <Overlay>
-          <Result options={options} answer={answer} />
+          <Result options={options} answer={answer} next={next} />
         </Overlay>
       }
       <Question>
