@@ -32,16 +32,42 @@ export const Options = styled.div`
   padding-bottom: 2rem;
   box-sizing: border-box;
   > div {
+    height: 0;
     width: 44%;
+    position: relative;
+    padding-bottom: 43%;
+    /* overflow: hidden; */
+    transition: transform 1s;
+    perspective: 600px;
+    transform-style: preserve-3d;
+    background-color: transparent;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    cursor: pointer;
-    padding: 10px 8px;
-    border-radius: 5px;
-    background-color: ${COLORS.secondary};
-    color: white;
+    > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-sizing: border-box;
+      cursor: pointer;
+      padding: 10px 8px;
+      background-color: ${COLORS.secondary};
+      color: white;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      &.is-flipped {
+        transform: rotateY(180deg);
+      }
+      &.front {
+        background-color: ${COLORS.secondary};
+      }
+      &.back {
+        background-color: red;
+        color: white;
+        transform: rotateY( 180deg );
+      }
+    }
   }
 `
 

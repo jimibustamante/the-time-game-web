@@ -3,8 +3,8 @@ import { Options as Wrapper } from '../styles'
 
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
@@ -15,10 +15,15 @@ const Option = memo(({ option, onAnswer }) => {
     const items = name.split(' - ')
     const shuffledItems = shuffle(items)
     name = shuffledItems.join(' - ')
-  } 
+  }
   return (
     <div onClick={() => onAnswer(option)}>
-      {name}
+      <div className='back'>
+        {name}
+      </div>
+      <div className='front'>
+        {name}
+      </div>
     </div>
   )
 })
