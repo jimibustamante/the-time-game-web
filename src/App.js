@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { AppWrapper, Question } from './styles'
+import { AppWrapper, Question, MainDescription } from './styles'
 import Options from './components/Options'
 import Result from './components/Result'
-import Overlay from './components/Overlay'
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -71,7 +70,7 @@ function App() {
     onAuthStateChanged(auth, async (user) => {
       try {
         const db = getFirestore();
-        const querySnapshot = await getDocs(collection(db, 'facts'));
+        const querySnapshot = await getDocs(collection(db, 'LibertadoresFinals'));
         const data = []
         querySnapshot.forEach((doc) => {
           data.push(doc.data())
@@ -89,15 +88,12 @@ function App() {
 
   return (
     <AppWrapper>
-      {answer &&
-        <Overlay>
-          <Result options={options} answer={answer} next={next} />
-        </Overlay>
-      }
       <Question>
         ¿Qué fue <br/> primero?
       </Question>
-      <Options options={options} onAnswer={onAnswer} />
+      <MainDescription>Finales de Copa Libertadores de América</MainDescription>
+      <Options options={options} onAnswer={onAnswer} answer={answer} />
+      <Result options={options} answer={answer} next={next} />
     </AppWrapper>
   );
 }
