@@ -1,5 +1,5 @@
-import React, { memo } from 'react'
-import { Options as Wrapper } from '../styles'
+import React, { memo, useRef, useEffect, useState, useCallback } from 'react'
+import { Options as Wrapper, Card } from '../styles'
 
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
@@ -9,31 +9,71 @@ function shuffle(a) {
   return a;
 }
 
-const Option = memo(({ option, onAnswer }) => {
-  let name = option.name
-  if (name.includes(' - ')) {
-    const items = name.split(' - ')
-    const shuffledItems = shuffle(items)
-    name = shuffledItems.join(' - ')
+const Option = memo(({ option, onAnswer, answer }) => {
+  const [flipped, setFlipped] = useState(false)
+  const [name, setName] = useState('')
+  const timer = useRef(null)
+
+  const optionName = useCallback(() => {
+    let name = option.name
+    if (name.includes(' - ')) {
+      const items = name.split(' - ')
+      const shuffledItems = shuffle(items)
+      name = shuffledItems.join(' - ')
+    }
+    return name
+  }, [option])
+
+  useEffect(() => {
+    if (answer && !flipped) {
+      clearTimeout(timer.current)
+      timer.current = setTimeout(() => {
+        setFlipped(true)
+      }, 700)
+    }
+    return () => {
+      clearTimeout(timer.current)
+    }
+  }, [answer, flipped])
+
+  useEffect(() => {
+    setName(optionName())
+  }, [])
+
+  const onClick = () => {
+    if (!flipped) {
+      setFlipped(true)
+      onAnswer(option)
+    }
   }
+
   return (
-    <div onClick={() => onAnswer(option)}>
-      <div className='back'>
-        {name}
+    <Card onClick={onClick} flipped={flipped}>
+      <div className='aspect-ratio'>
+        <div className='inner'>
+          <div className='back'>
+            <span>
+              {option.year}
+            </span>
+            <span>
+              {option?.description}
+            </span>
+          </div>
+          <div className='front'>
+            {name}
+          </div>
+        </div>
       </div>
-      <div className='front'>
-        {name}
-      </div>
-    </div>
+    </Card>
   )
 })
 
-function Options({ options = [], onAnswer }) {
+function Options({ options = [], onAnswer, answer }) {
   return (
     <Wrapper>
       {options.map((option) => {
         return(
-          <Option key={option.name} option={option} onAnswer={onAnswer} />
+          <Option key={option.name} option={option} onAnswer={onAnswer} answer={answer} />
         )
       })}
     </Wrapper>

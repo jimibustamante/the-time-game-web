@@ -11,22 +11,27 @@ function whichWasFirst(options) {
 }
 
 export default function Result({answer, options, next}) {
-  const solution = whichWasFirst(options)
   let result = false
-  if (solution.year === answer.year) {
-    result = true
+  if (answer) {
+    const solution = whichWasFirst(options)
+    if (solution.year === answer.year) {
+      result = true
+    }
   }
   
   return (
-    <Wrapper>
-      {result &&
-        <Success size={150} className='success' />
-        
-      }
-      {!result &&
-        <Fail size={150} className='fail' />
-      }
-      <Button onClick={next} >Next</Button>
+    <Wrapper show={answer}>
+      {answer && (
+        <>
+          {result &&
+            <Success size={80} className='success' />
+          }
+          {!result &&
+            <Fail size={80} className='fail' />
+          }
+          <Button onClick={next} >Next</Button>
+        </>
+      )}
     </Wrapper>
   )
 }
