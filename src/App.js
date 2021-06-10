@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { AppWrapper, Question, MainDescription } from './styles'
+import React, { useState, useEffect, useRef } from 'react'
+import { FontStyles, AppWrapper, Question, MainDescription, GameWrapper } from './styles'
+import LoadingView from './components/LoadingView'
 import Options from './components/Options'
 import Result from './components/Result'
-import { initializeApp } from 'firebase/app'
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import Overlay from './components/Overlay'
+import useAuth from './hooks/useAuth'
+import { getFirestore, collection, getDocs } from "firebase/firestore"
+// import { getAnalytics } from "firebase/analytics"
 
 function arraysEqual(a, b) {
   if (a === b) return true;
@@ -21,8 +23,15 @@ function App() {
   const [facts, setFacts] = useState([])
   const [options, setOptions] = useState([])
   const [answer, setAnswer] = useState(null)
+  const [loaging, setLoading] = useState(true)
+  const { user } = useAuth({ onSignedIn })
+  const analytics = useRef(null)
 
-  
+  function onSignedIn() {
+    // analytics.current = getAnalytics();
+    fetchFacts()
+  }
+
   function pickOptions(list) {
     const optionsIndexes = []
     while (optionsIndexes.length < 2) {
@@ -60,40 +69,37 @@ function App() {
   }
 
   async function fetchFacts() {
-    const firebaseApp = initializeApp({
-      apiKey: process.env.REACT_APP_API_KEY,
-      authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-      projectId: process.env.REACT_APP_PROJECT_ID,
-    });
-  
-    const auth = getAuth(firebaseApp);
-    onAuthStateChanged(auth, async (user) => {
-      try {
-        const db = getFirestore();
-        const querySnapshot = await getDocs(collection(db, 'LibertadoresFinals'));
-        const data = []
-        querySnapshot.forEach((doc) => {
-          data.push(doc.data())
-        });
-        setFacts(data)
-      } catch (error) {
-        console.error({error})
-      }
-    })
+    try {
+      const db = getFirestore();
+      const querySnapshot = await getDocs(collection(db, 'ChampionsFinals'));
+      const data = []
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data())
+      });
+      setFacts(data)
+    } catch (error) {
+      console.error({error})
+    } finally {
+      setLoading(false)
+    }
   }
-
-  useEffect(() => {
-    fetchFacts()
-  }, [])
 
   return (
     <AppWrapper>
-      <Question>
-        ¿Qué fue <br/> primero?
-      </Question>
-      <MainDescription>Finales de Copa Libertadores de América</MainDescription>
-      <Options options={options} onAnswer={onAnswer} answer={answer} />
-      <Result options={options} answer={answer} next={next} />
+      <FontStyles />
+      {loaging && (
+        <Overlay>
+          <LoadingView />
+        </Overlay>
+      )}
+      <GameWrapper>
+        <Question>
+          ¿Qué fue <br/> primero?
+        </Question>
+        <MainDescription>Finales de Champions League</MainDescription>
+        <Options options={options} onAnswer={onAnswer} answer={answer} />
+        <Result options={options} answer={answer} next={next} />
+      </GameWrapper>
     </AppWrapper>
   );
 }

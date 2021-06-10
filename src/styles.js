@@ -1,28 +1,91 @@
-import styled from 'styled-components'
+import styled, { createGlobalStyle, keyframes } from 'styled-components'
+import BlackGround from './fonts/black-ground/Black-Ground.woff'
 
 const COLORS = {
-  background: '#2BA84A',
+  background: '#8745C9',
   secondary: '#677DB7',
+  green: '#8FC750',
   text: '#2D3A3A',
   textLight: '#FCFFFC',
+  appNameWhite: '#FDFFFA'
 }
+
+const spin = keyframes`
+  100% {
+    transform: rotate(360deg);
+  }
+`
+
+export const FontStyles = createGlobalStyle`
+  @font-face {
+    font-family: 'Black Ground Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: url(${BlackGround}) format('woff');
+  }
+`
 
 export const AppWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
+  text-transform: uppercase;
   background-color: ${COLORS.background};
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 40px 20px;
+  padding: 0px 20px;
   box-sizing: border-box;
+`
 
+export const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${COLORS.background};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img.clock {
+    position: fixed;
+    width: 387px;
+    height: 408px;
+    left: -125px;
+    top: -2px;
+  }
+  h1.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 50px;
+    line-height: 55px;
+    font-family:'Black Ground Regular';
+    font-weight: normal;
+    span:first-child {
+      color: ${COLORS.green};
+    }
+    span:last-child {
+      color: ${COLORS.appNameWhite};
+    }
+  }
+  svg {
+    animation: ${spin} 1s linear infinite;
+    color: ${COLORS.green}
+  }
+`
+
+export const GameWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 0.5rem;
 `
 
 export const Question = styled.h1`
   font-size: 2.7rem;
-  color: ${COLORS.textLight};  
+  color: ${COLORS.green};  
+  font-family:'Black Ground Regular';
+  font-weight:normal;
   `
 export const MainDescription = styled.h3`
   color: ${COLORS.textLight};  
@@ -33,7 +96,6 @@ export const MainDescription = styled.h3`
   justify-content: center;
   align-items: center;
 `
-
 
 export const Card = styled.div`
   background-color: transparent;
@@ -87,7 +149,6 @@ export const Card = styled.div`
         cursor: pointer;
       }
       .back {
-        /* background-color: red; */
         color: ${COLORS.textLight};
         transform: rotateY( 180deg );
         display: flex;
@@ -111,13 +172,11 @@ export const Overlay = styled.div`
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 100;
-  padding: 3rem 2rem;
   box-sizing: border-box;
 `
 export const Result = styled.div`
   transition: opacity 0.5s ease-in-out;
   width: 100%;
-  /* position: fixed; */
   opacity: ${props => props.show ? '1' : '0'};
   bottom: 1rem;
   display: flex;
