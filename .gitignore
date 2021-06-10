@@ -25,3 +25,5 @@ yarn-error.log*
 *.csv
 venv
 ServiceAccountKey.json
+
+hosting.*
