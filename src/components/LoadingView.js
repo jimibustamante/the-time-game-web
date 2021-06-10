@@ -6,7 +6,7 @@ import { AiOutlineLoading3Quarters as Spinner} from 'react-icons/ai';
 export default function LoadingView() {
   return (
     <Loading>
-      <img className='clock' src={ClockImage} />
+      <img alt='' className='clock' src={ClockImage} />
       <h1 className='title'>
         <span>THE TIME</span>
         <span>GAME</span>

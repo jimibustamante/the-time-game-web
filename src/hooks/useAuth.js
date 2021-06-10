@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from 'firebase/app'
 
-export default function ({ onSignedIn }) {
+export default  function useAuth({ onSignedIn }) {
   const [user, setUser] = useState(null)
-  const signIn = async () => {
+  const signIn = useCallback(async () => {
     try {
       const firebaseApp = initializeApp({
         apiKey: process.env.REACT_APP_API_KEY,
@@ -21,18 +21,17 @@ export default function ({ onSignedIn }) {
           console.debug('Signed Out!')
         }
       })
-      const response = await signInAnonymously(auth)
-      // console.log({response})
+      await signInAnonymously(auth)
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error({errorMessage, errorCode})
     }
-  }
+  }, [])
 
   useEffect(() => {
     signIn()
-  }, [])
+  }, [signIn])
 
   return {
     user,
