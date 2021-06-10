@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { FontStyles, AppWrapper, Question, MainDescription, GameWrapper } from './styles'
+import { Question, MainDescription, GameWrapper } from './styles'
 import LoadingView from './components/LoadingView'
+import { useGameContext } from './contexts/game-context'
 import Options from './components/Options'
 import Result from './components/Result'
 import Overlay from './components/Overlay'
 import useAuth from './hooks/useAuth'
-import { getFirestore, collection, getDocs } from "firebase/firestore"
+import { getFirestore, collection, getDocs } from 'firebase/firestore'
 // import { getAnalytics } from "firebase/analytics"
 
 function arraysEqual(a, b) {
@@ -26,7 +27,8 @@ function App() {
   const [loaging, setLoading] = useState(true)
   const { user } = useAuth({ onSignedIn })
   const analytics = useRef(null)
-
+  const [gameState, dispatch] = useGameContext()
+  const { title, database } = gameState
   function onSignedIn() {
     // analytics.current = getAnalytics();
     fetchFacts()
@@ -71,7 +73,7 @@ function App() {
   async function fetchFacts() {
     try {
       const db = getFirestore();
-      const querySnapshot = await getDocs(collection(db, 'ChampionsFinals'));
+      const querySnapshot = await getDocs(collection(db, database))
       const data = []
       querySnapshot.forEach((doc) => {
         data.push(doc.data())
@@ -85,22 +87,19 @@ function App() {
   }
 
   return (
-    <AppWrapper>
-      <FontStyles />
+    <GameWrapper>
       {loaging && (
         <Overlay>
           <LoadingView />
         </Overlay>
       )}
-      <GameWrapper>
-        <Question>
-          ¿Qué fue <br/> primero?
-        </Question>
-        <MainDescription>Finales de Champions League</MainDescription>
-        <Options options={options} onAnswer={onAnswer} answer={answer} />
-        <Result options={options} answer={answer} next={next} />
-      </GameWrapper>
-    </AppWrapper>
+      <Question>
+        ¿Qué fue <br/> primero?
+      </Question>
+      <MainDescription>{title}</MainDescription>
+      <Options options={options} onAnswer={onAnswer} answer={answer} />
+      <Result options={options} answer={answer} next={next} />
+    </GameWrapper>
   );
 }
 

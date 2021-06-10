@@ -1,12 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { FontStyles, AppWrapper } from './styles'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  // Link
+} from "react-router-dom";
+import { GameContextProvider } from './contexts/game-context'
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GameContextProvider>
+      <AppWrapper>
+        <FontStyles />
+          <Router>
+            <Switch>
+              <Route path="/">
+                <App />
+              </Route>
+            </Switch>
+          </Router>
+      </AppWrapper>
+    </GameContextProvider>
+
   </React.StrictMode>,
   document.getElementById('root')
 );

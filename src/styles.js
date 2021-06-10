@@ -79,6 +79,9 @@ export const GameWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 3rem 0.5rem;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
 `
 
 export const Question = styled.h1`
@@ -168,6 +171,8 @@ export const Options = styled.div`
 
 export const Overlay = styled.div`
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
