@@ -21,7 +21,7 @@ export default function Home() {
         <span>GAME</span>
       </TopLogo>
       <TitleWrapper bottom='22%'>
-        <QuestionBackground />
+        <QuestionBackground style={{width: '100vw'}} />
         <div className='text-wrapper'>
           <h3>¿Que deseas hacer?</h3>
         </div>

@@ -21,7 +21,7 @@ export default function Themes() {
         <span>GAME</span>
       </TopLogo>
       <TitleWrapper>
-        <QuestionBackground />
+        <QuestionBackground style={{width: '100vw'}} />
         <div className='text-wrapper'>
           <h3>Selecciona un tema<br/> para jugar hoy</h3>
         </div>

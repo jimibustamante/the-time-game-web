@@ -101,7 +101,7 @@ function App() {
         <span>GAME</span>
       </TopLogo>
       <TitleWrapper bottom='10%'>
-        <QuestionBackground />
+        <QuestionBackground style={{width: '100vw'}}/>
         <div className='text-wrapper'>
           <h3>¿Qué evento sucedió<br/>primero?</h3>
           <span>{title}</span>
