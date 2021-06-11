@@ -11,22 +11,30 @@ import {
 import { GameContextProvider } from './contexts/game-context'
 
 import App from './App';
+import Themes from './components/Themes'
+import Home from './components/Home'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <GameContextProvider>
-      <AppWrapper>
-        <FontStyles />
-          <Router>
+    <AppWrapper>
+      <FontStyles />
+        <Router>
+          <GameContextProvider>
             <Switch>
-              <Route path="/">
+              <Route path="/:theme_id/play">
                 <App />
               </Route>
+              <Route path="/themes">
+                <Themes />
+              </Route>
+              <Route path="/">
+                <Home />
+              </Route>
             </Switch>
-          </Router>
-      </AppWrapper>
-    </GameContextProvider>
+          </GameContextProvider>
+        </Router>
+    </AppWrapper>
 
   </React.StrictMode>,
   document.getElementById('root')

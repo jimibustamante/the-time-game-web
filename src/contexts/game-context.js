@@ -12,13 +12,14 @@ const THEMES = {
   },
   'world_cup': {
     database: 'facts',
-    title: 'Finales de Champions Legue',
+    title: 'Finales Copa del Mundo',
   },
 }
 
 export const GameContextProvider = ({children}) => {
   const initialTheme = 'champions_legue'
   const initialState = {
+    themes: THEMES,
     theme: initialTheme,
     themeTitle: THEMES[initialTheme].title,
     database: THEMES[initialTheme].database,

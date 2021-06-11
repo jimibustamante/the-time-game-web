@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 import { Question, MainDescription, GameWrapper } from './styles'
 import LoadingView from './components/LoadingView'
 import { useGameContext } from './contexts/game-context'
 import Options from './components/Options'
 import Result from './components/Result'
 import Overlay from './components/Overlay'
-import useAuth from './hooks/useAuth'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 // import { getAnalytics } from "firebase/analytics"
 
@@ -25,14 +25,16 @@ function App() {
   const [options, setOptions] = useState([])
   const [answer, setAnswer] = useState(null)
   const [loaging, setLoading] = useState(true)
-  const { user } = useAuth({ onSignedIn })
   const analytics = useRef(null)
   const [gameState, dispatch] = useGameContext()
   const { title, database } = gameState
-  function onSignedIn() {
-    // analytics.current = getAnalytics();
-    fetchFacts()
-  }
+  const { theme_id } = useParams()
+  const history = useHistory()
+
+  // function onSignedIn() {
+  //   // analytics.current = getAnalytics();
+  //   fetchFacts()
+  // }
 
   function pickOptions(list) {
     const optionsIndexes = []
@@ -81,10 +83,15 @@ function App() {
       setFacts(data)
     } catch (error) {
       console.error({error})
+      history.push('/')
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchFacts()
+  }, [])
 
   return (
     <GameWrapper>

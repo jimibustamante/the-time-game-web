@@ -14,7 +14,6 @@ export default  function useAuth({ onSignedIn }) {
       const auth = getAuth(firebaseApp);
       onAuthStateChanged(auth, (_user) => {
         if (_user) {
-          // console.log({_user})
           setUser(_user)
           onSignedIn()
         } else {
