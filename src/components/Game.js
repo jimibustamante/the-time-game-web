@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Question, MainDescription, GameWrapper } from './styles'
-import LoadingView from './components/LoadingView'
-import { useGameContext } from './contexts/game-context'
-import Options from './components/Options'
-import Result from './components/Result'
-import Overlay from './components/Overlay'
+import { MainDescription, GameWrapper, TitleWrapper, TopLogo } from '../styles'
+import { ReactComponent as QuestionBackground } from '../images/question-bg-s.svg';
+import LoadingView from './LoadingView'
+import { useGameContext } from '../contexts/game-context'
+import Options from './Options'
+import Result from './Result'
+import Overlay from './Overlay'
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 // import { getAnalytics } from "firebase/analytics"
 
@@ -27,14 +28,9 @@ function App() {
   const [loaging, setLoading] = useState(true)
   const analytics = useRef(null)
   const [gameState, dispatch] = useGameContext()
-  const { title, database } = gameState
-  const { theme_id } = useParams()
+  const { theme, themes, database } = gameState
+  const title = theme ? themes[theme].title : ''
   const history = useHistory()
-
-  // function onSignedIn() {
-  //   // analytics.current = getAnalytics();
-  //   fetchFacts()
-  // }
 
   function pickOptions(list) {
     const optionsIndexes = []
@@ -100,10 +96,18 @@ function App() {
           <LoadingView />
         </Overlay>
       )}
-      <Question>
-        ¿Qué fue <br/> primero?
-      </Question>
-      <MainDescription>{title}</MainDescription>
+      <TopLogo>
+        <span>THE TIME</span>
+        <span>GAME</span>
+      </TopLogo>
+      <TitleWrapper bottom='10%'>
+        <QuestionBackground />
+        <div className='text-wrapper'>
+          <h3>¿Qué evento sucedió<br/>primero?</h3>
+          <span>{title}</span>
+        </div>
+      </TitleWrapper>
+      {/* <MainDescription>{title}</MainDescription> */}
       <Options options={options} onAnswer={onAnswer} answer={answer} />
       <Result options={options} answer={answer} next={next} />
     </GameWrapper>

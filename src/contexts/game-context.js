@@ -19,6 +19,7 @@ const THEMES = {
 export const GameContextProvider = ({children}) => {
   const initialTheme = 'champions_legue'
   const initialState = {
+    user: null,
     themes: THEMES,
     theme: initialTheme,
     themeTitle: THEMES[initialTheme].title,
@@ -26,6 +27,8 @@ export const GameContextProvider = ({children}) => {
   }
   const reducer = (state, action) => {
     switch (action.type) {
+      case 'SET_USER':
+        return { ...state, user: action.payload}
       case 'SET_THEME':
         const db = THEMES[action.payload].database
         const title = THEMES[action.payload].title

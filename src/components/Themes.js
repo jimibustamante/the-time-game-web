@@ -22,7 +22,9 @@ export default function Themes() {
       </TopLogo>
       <TitleWrapper>
         <QuestionBackground />
-        <h3>Selecciona un tema<br/> para jugar hoy</h3>
+        <div className='text-wrapper'>
+          <h3>Selecciona un tema<br/> para jugar hoy</h3>
+        </div>
       </TitleWrapper>
       {Object.keys(themes).map((themeKey) => {
         const theme = themes[themeKey]

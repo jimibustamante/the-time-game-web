@@ -116,6 +116,8 @@ export const GameWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  padding-top: 6rem;
 `
 
 export const Question = styled.h1`
@@ -198,6 +200,10 @@ export const Card = styled.div`
 export const Options = styled.div`
   width: 100%;
   display: flex;
+  padding-top: 2rem;
+  /* flex-grow: 2; */
+  /* padding: ; */
+  align-items: center;
   justify-content: space-evenly;
   padding-bottom: 2rem;
   box-sizing: border-box;
@@ -280,19 +286,29 @@ export const BigButton = styled.button`
 export const TitleWrapper = styled.div`
   display: flex;
   position: relative;
-  h3 {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 28px;
-    line-height: 33px;
-    text-align: center;
+  div.text-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    text-align: center;
-    width: 100%;
-    color: ${COLORS.background};
     bottom: ${(props) => props.bottom ? props.bottom : '15%'};
+    width: 100%;
+    h3 {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: 900;
+      font-size: 28px;
+      line-height: 33px;
+      text-align: center;
+      color: ${COLORS.background};
+    }
+    span {
+      margin-top: 1rem;
+      font-family: Helvetica Neue;
+      font-size: 14px;
+    }
   }
 `
 

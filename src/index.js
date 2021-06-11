@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import { GameContextProvider } from './contexts/game-context'
 
-import App from './App';
+import Game from './components/Game';
 import Themes from './components/Themes'
 import Home from './components/Home'
 import reportWebVitals from './reportWebVitals';
@@ -23,7 +23,7 @@ ReactDOM.render(
           <GameContextProvider>
             <Switch>
               <Route path="/:theme_id/play">
-                <App />
+                <Game />
               </Route>
               <Route path="/themes">
                 <Themes />

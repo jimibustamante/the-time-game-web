@@ -22,7 +22,9 @@ export default function Home() {
       </TopLogo>
       <TitleWrapper bottom='22%'>
         <QuestionBackground />
-        <h3>¿Que deseas hacer?</h3>
+        <div className='text-wrapper'>
+          <h3>¿Que deseas hacer?</h3>
+        </div>
       </TitleWrapper>
       <HomeActions>
         <BigButton onClick={goToPlay}>Jugar</BigButton>
