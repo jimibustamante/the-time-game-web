@@ -18,6 +18,9 @@ const spin = keyframes`
 `
 
 export const FontStyles = createGlobalStyle`
+  body {
+    background-color: ${COLORS.background};
+  }
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap');
   @font-face {
     font-family: 'Black Ground Regular';
@@ -58,6 +61,37 @@ export const AppWrapper = styled.div`
   box-sizing: border-box;
 `
 
+export const AppNameTitle = styled.h1`
+  font-size: 50px;
+  line-height: 55px;
+  font-family:'Black Ground Regular';
+  font-weight: normal;
+  ${logo}
+`
+
+export const SignIn = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${COLORS.background};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  svg.line {
+    position: fixed;
+    bottom: 0;
+  }
+`
+
+export const ClockImage = styled.img`
+  position: fixed;
+  width: 387px;
+  height: 408px;
+  left: -125px;
+  top: -2px;
+`
+
 export const Loading = styled.div`
   width: 100%;
   height: 100%;
@@ -66,13 +100,6 @@ export const Loading = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  img.clock {
-    position: fixed;
-    width: 387px;
-    height: 408px;
-    left: -125px;
-    top: -2px;
-  }
   h1.title {
     font-size: 50px;
     line-height: 55px;
@@ -239,6 +266,7 @@ export const Result = styled.div`
 `
 export const Button = styled.button`
   background-color: ${COLORS.secondary};
+  box-shadow: 0px 12px 36px -15px #000000;
   color: white;
   border: none;
   display: flex;
@@ -254,6 +282,7 @@ export const Button = styled.button`
 
 export const ThemeButton = styled.button`
   background-color: ${COLORS.green};
+  box-shadow: 0px 12px 36px -15px #000000;
   color: ${COLORS.textLight};
   border: none;
   display: flex;
@@ -319,4 +348,32 @@ export const TopLogo = styled.div`
   left: 17px;
   top: 13px;
   font-size: 2rem;
+`
+
+export const Form = styled.form`
+  width: 80%;
+  display: flex;
+  z-index: 10;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  /* flex-grow: 2; */
+  user-select: none;
+`
+
+export const InputText = styled.input`
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  background-color: appNameWhite;
+  border-radius: 10px;
+  border: none;
+  color: text;
+  padding: 15px 25px;
+  text-align: left;
+  user-select: text;
+  font-size: 16px;
 `

@@ -1,12 +1,12 @@
 import React from 'react'
-import { Loading } from '../styles'
-import ClockImage from '../images/clock-img.png'
+import { Loading, ClockImage } from '../styles'
+import Clock from '../images/clock-img.png'
 import { AiOutlineLoading3Quarters as Spinner} from 'react-icons/ai';
 
 export default function LoadingView() {
   return (
     <Loading>
-      <img alt='' className='clock' src={ClockImage} />
+      <ClockImage src={Clock} />
       <h1 className='title'>
         <span>THE TIME</span>
         <span>GAME</span>

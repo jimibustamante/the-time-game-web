@@ -6,12 +6,13 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  // Link
 } from "react-router-dom";
 import { GameContextProvider } from './contexts/game-context'
 
 import Game from './components/Game';
 import Themes from './components/Themes'
+import SignIn from './components/SignIn'
+import FinishSignIn from './components/FinishSignIn'
 import Home from './components/Home'
 import reportWebVitals from './reportWebVitals';
 
@@ -28,8 +29,17 @@ ReactDOM.render(
               <Route path="/themes">
                 <Themes />
               </Route>
-              <Route path="/">
+              <Route path='/sign_in'>
+                <SignIn />
+              </Route>
+              <Route path='/finish_sign_up'>
+                <FinishSignIn />
+              </Route>
+              <Route path="/home">
                 <Home />
+              </Route>
+              <Route path='/'>
+                <SignIn />
               </Route>
             </Switch>
           </GameContextProvider>
