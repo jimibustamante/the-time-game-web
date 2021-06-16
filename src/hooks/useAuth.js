@@ -1,6 +1,7 @@
-import React, { useEffect, useCallback } from 'react'
-import { useHistory } from 'react-router-dom';
-import { getAuth, EmailAuthProvider, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged } from "firebase/auth"
+import React, { useEffect, useCallback, useRef } from 'react'
+import { useHistory, useParams } from 'react-router-dom';
+import { getAuth, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged, signOut } from "firebase/auth"
+import { getFirestore, collection, addDoc, getDocs, where, query } from 'firebase/firestore'
 import { initializeApp } from 'firebase/app'
 import { useGameContext } from '../contexts/game-context'
 
@@ -9,6 +10,15 @@ export default  function useAuth({ onSignedIn }) {
   const [gameState, dispatch] = useGameContext()
   const { user } = gameState
   const history = useHistory()
+  const dbRef = useRef(null)
+
+  function getDb() {
+    if (!dbRef.current) {
+      dbRef.current = getFirestore()
+    }
+    return dbRef.current
+  }
+
   const actionCodeSettings = (username) => {
     return {
       url: `${window.location.origin}/finish_sign_up?username=${username}`,
@@ -30,7 +40,6 @@ export default  function useAuth({ onSignedIn }) {
       if (user) return
       const auth = getAuth()
       const settings = actionCodeSettings(username)
-      console.log({settings})
       await sendSignInLinkToEmail(auth, email, settings)
       alert('Te hemos enviado un link de acceso a tu correo.')
       window.localStorage.setItem('emailForSignIn', email)
@@ -42,7 +51,7 @@ export default  function useAuth({ onSignedIn }) {
     }
   }, [user, dispatch])
 
-  const finishSignIn = useCallback(async () => {
+  const finishSignIn = useCallback(async ({ username }) => {
     try {
       const auth = getAuth()
       if (isSignInWithEmailLink(auth, window.location.href)) {
@@ -51,7 +60,15 @@ export default  function useAuth({ onSignedIn }) {
           email = window.prompt('Ingresa el mail con el que estás ingresando.')
         }
         const resp = await signInWithEmailLink(auth, email, window.location.href)
+        const user = resp.user
+        const db = getDb();
+
         window.localStorage.removeItem('emailForSignIn')
+        const docRef = await addDoc(collection(db, 'users'), {
+          email: user.email,
+          username,
+          uid: user.uid,
+        })
       }
     } catch (error) {
       const errorCode = error.code
@@ -71,11 +88,19 @@ export default  function useAuth({ onSignedIn }) {
       const auth = getAuth(firebaseApp)
       onAuthStateChanged(auth, (_user) => {
         if (_user) {
-          dispatch({ type: 'SET_USER', payload: _user })
-          onSignedIn()
-          history.replace('/home')
+          const db = getDb()
+          const usersCollection = collection(db, 'users')
+          const q = query(usersCollection, where('email', '==', _user.email))
+          getDocs(q).then((querySnapshot) => {
+            if (querySnapshot?.docs.length) {
+              const user = querySnapshot.docs[0].data()
+              dispatch({ type: 'SET_USER', payload: user })
+              onSignedIn()
+              history.replace('/home')
+            }
+          })
         } else {
-          history.replace('/sign_in')
+          history.replace('/')
           console.debug('Signed Out!')
         }
       })
@@ -86,9 +111,22 @@ export default  function useAuth({ onSignedIn }) {
     }
   }, [])
 
+  const signOut = async () => {
+    const auth = getAuth()
+    try {
+      await signOut(auth)
+      history.go('/')
+    } catch (error) {
+      const errorCode = error.code
+      const errorMessage = error.message
+      console.error({errorMessage, errorCode}) 
+    }
+  }
+
   return {
     signIn,
     finishSignIn,
+    signOut,
     user,
   }
 }

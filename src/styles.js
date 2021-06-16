@@ -60,6 +60,43 @@ export const AppWrapper = styled.div`
   padding: 0px 20px;
   box-sizing: border-box;
 `
+const menuWidth = '40vw'
+export const Menu = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: -${menuWidth};
+  display: flex;
+  z-index: 20;
+  opacity: .95;
+  flex-direction: column;
+  height: 100vh;
+  width: ${menuWidth};
+  box-sizing: border-box;
+  padding: 15px 10px;
+  background-color: ${COLORS.green};
+  transition: transform 500ms ease-in-out;
+  .burger-wrapper {
+    position: relative;
+    .burger {
+      cursor: pointer;
+      position: absolute;
+      left: 0;
+      top: 5;
+      transform: translateX(calc(-100% - 16px))
+    }
+  }
+  &.opened {
+    transform: translateX(-100%);
+  }
+  span {
+    font-family: 'Roboto',sans-serif;
+    color: ${COLORS.textLight};
+    font-weight: 900;
+    line-height: 3;
+
+  }
+`
 
 export const AppNameTitle = styled.h1`
   font-size: 50px;

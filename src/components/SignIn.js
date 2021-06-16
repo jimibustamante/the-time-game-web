@@ -17,7 +17,7 @@ export default function SignIn() {
   }
 
   function onSignedIn() {
-    console.log('onSignedIn')
+    console.debug('onSignedIn')
   }
 
   function validateUserName(params) {
@@ -27,7 +27,6 @@ export default function SignIn() {
   const handleEmailChange = useCallback(event => {
     const value = event.target.value
     setEmail(value)
-    console.log({value})
   }, [email, validateEmail])
 
   const handleUsernameChange = useCallback(event => {
@@ -41,9 +40,9 @@ export default function SignIn() {
       setFormError('Has dejado campos vacios.')
     }
     validateEmail(email)
-    console.log({ email, username })
     signIn({ email, username })
   }, [email, username, signIn])
+
   return (
     <Wrapper>
       <ClockImage src={Clock} />

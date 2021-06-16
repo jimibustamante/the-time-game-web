@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { GameContextProvider } from './contexts/game-context'
 
+import Menu from './components/Menu'
 import Game from './components/Game';
 import Themes from './components/Themes'
 import SignIn from './components/SignIn'
@@ -22,6 +23,7 @@ ReactDOM.render(
       <FontStyles />
         <Router>
           <GameContextProvider>
+            <Menu />
             <Switch>
               <Route path="/:theme_id/play">
                 <Game />

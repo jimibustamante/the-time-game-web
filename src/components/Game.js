@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { MainDescription, GameWrapper, TitleWrapper, TopLogo } from '../styles'
+import {  useHistory } from 'react-router-dom'
+import { GameWrapper, TitleWrapper, TopLogo } from '../styles'
 import { ReactComponent as QuestionBackground } from '../images/question-bg-s.svg';
 import LoadingView from './LoadingView'
 import { useGameContext } from '../contexts/game-context'
