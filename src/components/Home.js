@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth'
-import { Home as HomeWrapper , HomeActions, TitleWrapper, TopLogo, BigButton } from '../styles'
+import LoadingView from './LoadingView'
+import { Home as HomeWrapper , HomeActions, TitleWrapper, TopLogo, BigButton, Overlay } from '../styles'
 import { useGameContext } from '../contexts/game-context'
 import { ReactComponent as QuestionBackground } from '../images/question-bg.svg';
 
 export default function Home() {
+  const [loading, setLoading] = useState(true)
   const [gameState, dispatch] = useGameContext()
   const { user } = useAuth({ onSignedIn: () => {} })
   const history = useHistory()
@@ -14,8 +16,17 @@ export default function Home() {
     history.push('/themes')
   }
 
+  useEffect(() => {
+    if(user?.username) setLoading(false)
+  }, [user])
+
   return (
     <HomeWrapper>
+      {loading && (
+        <Overlay>
+          <LoadingView />
+        </Overlay>
+      )}
       <TopLogo>
         <span>THE TIME</span>
         <span>GAME</span>

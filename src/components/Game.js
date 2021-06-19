@@ -25,7 +25,7 @@ function App() {
   const [facts, setFacts] = useState([])
   const [options, setOptions] = useState([])
   const [answer, setAnswer] = useState(null)
-  const [loaging, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const analytics = useRef(null)
   const [gameState, dispatch] = useGameContext()
   const { theme, themes, database } = gameState
@@ -91,7 +91,7 @@ function App() {
 
   return (
     <GameWrapper>
-      {loaging && (
+      {loading && (
         <Overlay>
           <LoadingView />
         </Overlay>

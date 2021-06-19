@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useRef } from 'react'
 import { useHistory } from 'react-router-dom';
-import { getAuth, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged, FacebookAuthProvider, signInWithPopup, signOut } from "firebase/auth"
+import { getAuth, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged, FacebookAuthProvider, signInWithPopup, signOut as firebaseSignOut } from "firebase/auth"
 import { getFirestore, collection, addDoc, getDocs, where, query } from 'firebase/firestore'
 import { initializeApp } from 'firebase/app'
 import { useGameContext } from '../contexts/game-context'
@@ -117,7 +117,7 @@ export default  function useAuth({ onSignedIn }) {
   const signOut = async () => {
     const auth = getAuth()
     try {
-      await signOut(auth)
+      await firebaseSignOut(auth)
       history.go('/')
     } catch (error) {
       const errorCode = error.code
