@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useRef } from 'react'
-import { useHistory, useParams } from 'react-router-dom';
-import { getAuth, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged, signOut } from "firebase/auth"
+import { useHistory } from 'react-router-dom';
+import { getAuth, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged, FacebookAuthProvider, signInWithPopup, signOut } from "firebase/auth"
 import { getFirestore, collection, addDoc, getDocs, where, query } from 'firebase/firestore'
 import { initializeApp } from 'firebase/app'
 import { useGameContext } from '../contexts/game-context'
@@ -35,6 +35,15 @@ export default  function useAuth({ onSignedIn }) {
     }
   }
 
+  const addUser = async (user, username) => {
+    const db = getDb()
+    await addDoc(collection(db, 'users'), {
+      email: user.email,
+      username,
+      uid: user.uid,
+    })
+  }
+
   const signIn = useCallback(async ({email, username}) => {
     try {
       if (user) return
@@ -61,14 +70,8 @@ export default  function useAuth({ onSignedIn }) {
         }
         const resp = await signInWithEmailLink(auth, email, window.location.href)
         const user = resp.user
-        const db = getDb();
-
         window.localStorage.removeItem('emailForSignIn')
-        const docRef = await addDoc(collection(db, 'users'), {
-          email: user.email,
-          username,
-          uid: user.uid,
-        })
+        addUser(user, username)
       }
     } catch (error) {
       const errorCode = error.code
@@ -123,9 +126,33 @@ export default  function useAuth({ onSignedIn }) {
     }
   }
 
+  const facebookSignIn = async () => {
+    try {
+      const provider = new FacebookAuthProvider()
+      const auth = getAuth()
+      provider.setCustomParameters({
+        'display': 'popup'
+      })
+      
+      const result = await signInWithPopup(auth, provider)
+      const { user } = result
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      addUser(user, user.displayName)
+      console.log({result, credential})
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.email;
+      const credential = FacebookAuthProvider.credentialFromError(error);
+      console.log({errorCode, errorMessage, email, credential})
+      console.error(error)
+    }
+  }
+
   return {
     signIn,
     finishSignIn,
+    facebookSignIn,
     signOut,
     user,
   }

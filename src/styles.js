@@ -9,6 +9,7 @@ const COLORS = {
   text: '#2D3A3A',
   textLight: '#FCFFFC',
   appNameWhite: '#FDFFFA',
+  facebookBlue: '#1877f2',
 }
 
 const spin = keyframes`
@@ -301,7 +302,8 @@ export const Result = styled.div`
     }
   }
 `
-export const Button = styled.button`
+
+const buttonBase = `
   background-color: ${COLORS.secondary};
   box-shadow: 0px 12px 36px -15px #000000;
   color: white;
@@ -315,6 +317,25 @@ export const Button = styled.button`
   margin-top: 2rem;
   padding: 10px 20px;
   border-radius: 5px;
+  z-index: 10;
+`
+
+export const Button = styled.button`
+  ${buttonBase}
+`
+
+export const FacebookLoginButton = styled.button `
+  ${buttonBase}
+  background-color: ${COLORS.facebookBlue};
+  display: flex;
+  align-items: center;
+  color: ${COLORS.textLight};
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  img {
+    max-width: 2rem;
+    margin-right: 15px;
+  }
 `
 
 export const ThemeButton = styled.button`

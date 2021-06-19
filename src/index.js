@@ -12,7 +12,8 @@ import { GameContextProvider } from './contexts/game-context'
 import Menu from './components/Menu'
 import Game from './components/Game';
 import Themes from './components/Themes'
-import SignIn from './components/SignIn'
+// import SignIn from './components/SignIn'
+import FacebookSignIn from './components/FacebookSignIn';
 import FinishSignIn from './components/FinishSignIn'
 import Home from './components/Home'
 import reportWebVitals from './reportWebVitals';
@@ -32,7 +33,7 @@ ReactDOM.render(
                 <Themes />
               </Route>
               <Route path='/sign_in'>
-                <SignIn />
+                <FacebookSignIn />
               </Route>
               <Route path='/finish_sign_up'>
                 <FinishSignIn />
@@ -41,7 +42,7 @@ ReactDOM.render(
                 <Home />
               </Route>
               <Route path='/'>
-                <SignIn />
+                <FacebookSignIn />
               </Route>
             </Switch>
           </GameContextProvider>
