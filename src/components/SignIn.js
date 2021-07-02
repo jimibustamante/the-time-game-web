@@ -20,10 +20,6 @@ export default function SignIn() {
     console.debug('onSignedIn')
   }
 
-  function validateUserName(params) {
-  // TODO 
-  }
-
   const handleEmailChange = useCallback(event => {
     const value = event.target.value
     setEmail(value)

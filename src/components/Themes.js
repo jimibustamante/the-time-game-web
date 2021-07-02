@@ -14,6 +14,8 @@ export default function Themes() {
     history.push(`${theme}/play`)
   }
 
+  console.log({themes})
+
   return (
     <ThemePickView>
       <TopLogo>
