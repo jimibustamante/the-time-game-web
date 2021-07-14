@@ -49,7 +49,6 @@ export default  function useAuth({ onSignedIn }) {
             photoURL: _user.photoURL,
             providerId: _user.providerId,
           }).then((user) => {
-            console.log({user})
             dispatch({ type: 'SET_USER', payload: user })
             getThemes().then(themes => {
               dispatch( {type: 'SET_THEMES', payload: themes} )
@@ -93,14 +92,12 @@ export default  function useAuth({ onSignedIn }) {
       const result = await signInWithPopup(auth, provider)
       const { user } = result
       const credential = FacebookAuthProvider.credentialFromResult(result)
-      console.log({user})
 
     } catch (error) {
       const errorCode = error.code
       const errorMessage = error.message
       const email = error.email
       const credential = FacebookAuthProvider.credentialFromError(error)
-      console.log({errorCode, errorMessage, email, credential})
       console.error(error)
     }
   }

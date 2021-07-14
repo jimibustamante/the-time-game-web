@@ -266,8 +266,6 @@ export const Options = styled.div`
   width: 100%;
   display: flex;
   padding-top: 2rem;
-  /* flex-grow: 2; */
-  /* padding: ; */
   align-items: center;
   justify-content: space-evenly;
   padding-bottom: 2rem;
@@ -283,12 +281,17 @@ export const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 100;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
 export const Result = styled.div`
   transition: opacity 0.5s ease-in-out;
   width: 100%;
   opacity: ${props => props.show ? '1' : '0'};
   bottom: 1rem;
+  padding-bottom: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -434,4 +437,16 @@ export const InputText = styled.input`
   text-align: left;
   user-select: text;
   font-size: 16px;
+`
+
+export const GameSummary = styled.div`
+  background-color: ${COLORS.green};
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 80vw;
+  min-height: 70vh;
+  color: ${COLORS.textLight};
 `

@@ -19,9 +19,60 @@ export const signIn = async (params) => {
 export const getThemes = async () => {
   try {
     const response = await axios.get('/themes')
-    console.log({response})
     const { data } = response
     return data.themes
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+// params: {
+//   themeId: '',
+//   userId: '',
+// }
+export const newGame = async (params) => {
+  try {
+    const response = await axios.post('/games/new', params)
+    const { data } = response
+    return data.game
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+// params: {
+//   questionId: '',
+//   optionId: '',
+// }
+export const answerQuestion = async (params) => {
+  try {
+    const response = await axios.post('/questions/answer', params)
+    const { data } = response
+    return data.answer
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+export const getNextGameQuestion = async (game_id) => {
+  try {
+    const response = await axios.get(`/games/${game_id}/questions/next`)
+    const { data } = response
+    return data.game
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+export const getGameSummary = async (game_id) => {
+  try {
+    const response = await axios.get(`/games/${game_id}/summary`)
+    const { data } = response
+    return data.summary
   } catch (error) {
     console.error(error)
     return error
