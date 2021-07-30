@@ -13,16 +13,17 @@ const Option = memo(({ option, onAnswer, answer }) => {
   const [flipped, setFlipped] = useState(false)
   const [name, setName] = useState('')
   const timer = useRef(null)
+  const { fact } = option
 
   const optionName = useCallback(() => {
-    let name = option.name
+    let name = fact.name
     if (name.includes(' - ')) {
       const items = name.split(' - ')
       const shuffledItems = shuffle(items)
       name = shuffledItems.join(' - ')
     }
     return name
-  }, [option])
+  }, [fact])
 
   useEffect(() => {
     if (answer && !flipped) {
@@ -53,10 +54,10 @@ const Option = memo(({ option, onAnswer, answer }) => {
         <div className='inner'>
           <div className='back'>
             <span>
-              {option.year}
+              {fact.year}
             </span>
             <span>
-              {option?.description}
+              {fact?.description}
             </span>
           </div>
           <div className='front'>
@@ -72,8 +73,9 @@ function Options({ options = [], onAnswer, answer }) {
   return (
     <Wrapper>
       {options.map((option) => {
+        const { fact } = option
         return(
-          <Option key={option.name} option={option} onAnswer={onAnswer} answer={answer} />
+          <Option key={option.id} option={option} fact={fact} onAnswer={onAnswer} answer={answer} />
         )
       })}
     </Wrapper>

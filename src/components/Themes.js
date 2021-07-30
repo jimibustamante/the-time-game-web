@@ -9,9 +9,9 @@ export default function Themes() {
   const { themes } = gameState
   const history = useHistory();
 
-  const onThemePicked = (theme) => {
-    dispatch({type: 'SET_THEME', payload: theme})
-    history.push(`${theme}/play`)
+  const onThemePicked = (themeId) => {
+    dispatch({type: 'SET_THEME', payload: themeId})
+    history.push(`${themeId}/play`)
   }
 
   return (
@@ -30,7 +30,7 @@ export default function Themes() {
         const theme = themes[themeKey]
         const { title } = theme
         return (
-          <ThemeButton key={themeKey} onClick={() => onThemePicked(themeKey)}>{title}</ThemeButton>
+          <ThemeButton key={theme.id} onClick={() => onThemePicked(theme.id)}>{title}</ThemeButton>
         )
       })}
     </ThemePickView>

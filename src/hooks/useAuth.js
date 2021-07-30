@@ -1,64 +1,15 @@
-import React, { useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom';
-import { getAuth, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged, FacebookAuthProvider, signInWithPopup, signOut as firebaseSignOut } from "firebase/auth"
-import { getFirestore, collection, addDoc, getDocs, where, query } from 'firebase/firestore'
+import { getAuth, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, FacebookAuthProvider, signInWithPopup, signOut as firebaseSignOut } from "firebase/auth"
 import { initializeApp } from 'firebase/app'
 import { useGameContext } from '../contexts/game-context'
+import { signIn, getThemes } from '../lib/api'
 
 export default  function useAuth({ onSignedIn }) {
   if (!onSignedIn) onSignedIn = () => {}
   const [gameState, dispatch] = useGameContext()
   const { user } = gameState
   const history = useHistory()
-  const dbRef = useRef(null)
-
-  function getDb() {
-    if (!dbRef.current) {
-      dbRef.current = getFirestore()
-    }
-    return dbRef.current
-  }
-
-  const actionCodeSettings = (username) => {
-    return {
-      url: `${window.location.origin}/finish_sign_up?username=${username}`,
-      handleCodeInApp: true,
-      iOS: {
-        bundleId: `${window.location.hostname}.ios`
-      },
-      android: {
-        packageName: `${window.location.hostname}.android`,
-        installApp: true,
-        minimumVersion: '12'
-      },
-      dynamicLinkDomain: `thetimegame.page.link`
-    }
-  }
-
-  const addUser = async (user, username) => {
-    const db = getDb()
-    await addDoc(collection(db, 'users'), {
-      email: user.email,
-      username,
-      uid: user.uid,
-    })
-  }
-
-  const signIn = useCallback(async ({email, username}) => {
-    try {
-      if (user) return
-      const auth = getAuth()
-      const settings = actionCodeSettings(username)
-      await sendSignInLinkToEmail(auth, email, settings)
-      alert('Te hemos enviado un link de acceso a tu correo.')
-      window.localStorage.setItem('emailForSignIn', email)
-
-    } catch (error) {
-      const errorCode = error.code
-      const errorMessage = error.message
-      console.error({errorMessage, errorCode})
-    }
-  }, [user, dispatch])
 
   const finishSignIn = useCallback(async ({ username }) => {
     try {
@@ -71,7 +22,6 @@ export default  function useAuth({ onSignedIn }) {
         const resp = await signInWithEmailLink(auth, email, window.location.href)
         const user = resp.user
         window.localStorage.removeItem('emailForSignIn')
-        addUser(user, username)
       }
     } catch (error) {
       const errorCode = error.code
@@ -91,16 +41,21 @@ export default  function useAuth({ onSignedIn }) {
       const auth = getAuth(firebaseApp)
       onAuthStateChanged(auth, (_user) => {
         if (_user) {
-          const db = getDb()
-          const usersCollection = collection(db, 'users')
-          const q = query(usersCollection, where('email', '==', _user.email))
-          getDocs(q).then((querySnapshot) => {
-            if (querySnapshot?.docs.length) {
-              const user = querySnapshot.docs[0].data()
-              dispatch({ type: 'SET_USER', payload: user })
+          signIn({
+            uid: _user.uid,
+            accessToken: _user.accessToken,
+            username: _user.displayName,
+            email: _user.email,
+            photoURL: _user.photoURL,
+            providerId: _user.providerId,
+          }).then((user) => {
+            dispatch({ type: 'SET_USER', payload: user })
+            getThemes().then(themes => {
+              dispatch( {type: 'SET_THEMES', payload: themes} )
               onSignedIn()
-              history.replace('/home')
-            }
+              history.replace('/home')            
+            })
+
           })
         } else {
           history.replace('/')
@@ -136,15 +91,13 @@ export default  function useAuth({ onSignedIn }) {
       
       const result = await signInWithPopup(auth, provider)
       const { user } = result
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      addUser(user, user.displayName)
-      console.log({result, credential})
+      const credential = FacebookAuthProvider.credentialFromResult(result)
+
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.email;
-      const credential = FacebookAuthProvider.credentialFromError(error);
-      console.log({errorCode, errorMessage, email, credential})
+      const errorCode = error.code
+      const errorMessage = error.message
+      const email = error.email
+      const credential = FacebookAuthProvider.credentialFromError(error)
       console.error(error)
     }
   }

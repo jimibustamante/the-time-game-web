@@ -1,92 +1,70 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {  useHistory } from 'react-router-dom'
+import Game from '../models/Game'
+import { useHistory } from 'react-router-dom'
 import { GameWrapper, TitleWrapper, TopLogo } from '../styles'
-import { ReactComponent as QuestionBackground } from '../images/question-bg-s.svg';
+import { ReactComponent as QuestionBackground } from '../images/question-bg-s.svg'
 import LoadingView from './LoadingView'
 import { useGameContext } from '../contexts/game-context'
 import Options from './Options'
 import Result from './Result'
 import Overlay from './Overlay'
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
-// import { getAnalytics } from "firebase/analytics"
+import GameSummary from './GameSummary'
 
-function arraysEqual(a, b) {
-  if (a === b) return true;
-  if (a == null || b == null) return false;
-  if (a.length !== b.length) return false;
+import { newGame, answerQuestion, getNextGameQuestion } from '../lib/api'
 
-  for (var i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
-
-function App() {
-  const [facts, setFacts] = useState([])
+function GameComponent() {
+  const [game, setGame] = useState(null)
   const [options, setOptions] = useState([])
   const [answer, setAnswer] = useState(null)
+  const [gameOver, setGameOver] = useState(false)
+  const [question, setQuestion] = useState(null)
   const [loading, setLoading] = useState(true)
   const analytics = useRef(null)
   const [gameState, dispatch] = useGameContext()
-  const { theme, themes, database } = gameState
+  const { theme, themes, user } = gameState
   const title = theme ? themes[theme].title : ''
   const history = useHistory()
 
-  function pickOptions(list) {
-    const optionsIndexes = []
-    while (optionsIndexes.length < 2) {
-      const index = Math.floor(Math.random() * list.length)
-      if (optionsIndexes.length === 1 && list[optionsIndexes[0]].name.includes(' - ')) {
-        const optionA = list[optionsIndexes[0]].name.split(' - ')
-        const optionB = list[index].name.split(' - ')
-        if (!arraysEqual(optionA, optionB)) optionsIndexes.push(index)
-      } else {
-        if (!optionsIndexes.includes(index)) {
-          optionsIndexes.push(index)
-        }
-      }
-    }
+  const onAnswer = async (option) => {
+    // set answer and send to server
+    const answer = await answerQuestion({questionId: question.id, optionId: option.id})
+    setAnswer(answer)
+  }
 
-    const opts = optionsIndexes.map((index) => {
-      return list[index]
-    })
-    return opts
+  const next = async () => {
+    setAnswer(null)
+    const updatedGame = await getNextGameQuestion(game.id)
+    if (updatedGame && updatedGame.id === game.id && updatedGame.question) {
+      game.currentQuestion = updatedGame.question
+      game.questions_completed = updatedGame.questions_completed
+      setQuestion(game.currentQuestion)
+      setOptions(game.currentQuestion.options)
+    } else {
+      setGameOver(true)
+    }
   }
 
   useEffect(() => {
-    if (facts.length <= 0) return
-    setOptions(pickOptions(facts))
-    
-  }, [facts])
+    if (game) {
+      const currentQuestion = game.currentQuestion
+      setQuestion(currentQuestion)
+      setOptions(currentQuestion.options)
+      setLoading(false)
+    }
+  }, [game])
 
-  const onAnswer = (option) => {
-    setAnswer(option)
-  }
-
-  const next = () => {
-    setAnswer(null)
-    setOptions(pickOptions(facts))
-  }
-
-  async function fetchFacts() {
+  async function createGame() {
     try {
-      const db = getFirestore();
-      const querySnapshot = await getDocs(collection(db, database))
-      const data = []
-      querySnapshot.forEach((doc) => {
-        data.push(doc.data())
-      });
-      setFacts(data)
+      const _game = await newGame({ userId: user.id, themeId: theme })
+      setGame(new Game(_game))
     } catch (error) {
       console.error({error})
       history.push('/')
-    } finally {
-      setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchFacts()
+    createGame()
   }, [])
 
   return (
@@ -96,22 +74,28 @@ function App() {
           <LoadingView />
         </Overlay>
       )}
+      {game && gameOver &&(
+        <GameSummary gameId={game.id} />
+      )}
       <TopLogo>
         <span>THE TIME</span>
         <span>GAME</span>
       </TopLogo>
-      <TitleWrapper bottom='10%'>
-        <QuestionBackground style={{width: '100vw'}}/>
-        <div className='text-wrapper'>
-          <h3>¿Qué evento sucedió<br/>primero?</h3>
-          <span>{title}</span>
-        </div>
-      </TitleWrapper>
-      {/* <MainDescription>{title}</MainDescription> */}
+      {question && (
+        <TitleWrapper bottom='10%'>
+          <QuestionBackground style={{width: '100vw'}}/>
+          <div className='text-wrapper'>
+            <h3>{question.text}</h3>
+            <span>{title}</span>
+          </div>
+        </TitleWrapper>
+      )}
       <Options options={options} onAnswer={onAnswer} answer={answer} />
-      <Result options={options} answer={answer} next={next} />
+      {answer && (
+        <Result options={options} answer={answer} next={next} />
+      )}
     </GameWrapper>
   );
 }
 
-export default App;
+export default GameComponent;
