@@ -21,9 +21,10 @@ function GameComponent() {
   const [loading, setLoading] = useState(true)
   const analytics = useRef(null)
   const [gameState, dispatch] = useGameContext()
-  const { theme, themes, user } = gameState
-  const title = theme ? themes[theme].title : ''
+  const { theme, themes, user, themeTitle } = gameState
+
   const history = useHistory()
+  console.log({ theme, themes, user, themeTitle })
 
   const onAnswer = async (option) => {
     // set answer and send to server
@@ -86,7 +87,7 @@ function GameComponent() {
           <QuestionBackground style={{width: '100vw'}}/>
           <div className='text-wrapper'>
             <h3>{question.text}</h3>
-            <span>{title}</span>
+            <span>{themeTitle}</span>
           </div>
         </TitleWrapper>
       )}

@@ -9,7 +9,6 @@ export const GameContextProvider = ({children}) => {
     themes: {},
     theme: '',
     themeTitle: '',
-    database: '',
   }
   const reducer = (state, action) => {
     switch (action.type) {
@@ -18,9 +17,7 @@ export const GameContextProvider = ({children}) => {
       case 'SET_THEMES':
         return { ...state, themes: action.payload }
       case 'SET_THEME':
-        const db = state.themes[action.payload].database
-        const title = state.themes[action.payload].title
-        return { ...state, theme: action.payload, database: db, themeTitle: title }
+        return { ...state, theme: action.payload.id, themeTitle: action.payload.title }
       default: throw new Error('Unexpected action: ' + action.type)
     }
   }
