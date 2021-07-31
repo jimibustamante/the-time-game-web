@@ -69,10 +69,16 @@ const Option = memo(({ option, onAnswer, answer }) => {
   )
 })
 
-function Options({ options = [], onAnswer, answer }) {
+const Options = ({ options = [], onAnswer, answer }) => {
+  const [shuffledOptions, setShuffledOptions] = useState([])
+  useEffect(() => {
+    // Lets shuffle the options
+    const shuffledOptions = shuffle(options)
+    setShuffledOptions(shuffledOptions)
+  }, [options])
   return (
     <Wrapper>
-      {options.map((option) => {
+      {shuffledOptions.map((option) => {
         const { fact } = option
         return(
           <Option key={option.id} option={option} fact={fact} onAnswer={onAnswer} answer={answer} />
